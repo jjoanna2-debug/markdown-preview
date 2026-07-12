@@ -184,7 +184,7 @@ final class EditorViewController: NSViewController, WKNavigationDelegate {
         // column at the preview's measure, Full Width spans the window.
         let columnMaxWidth = ContentWidthSetting.current == .fullWidth
             ? "none"
-            : "\(MarkdownHTML.preferredPageWidth)px"
+            : "\(MarkdownHTML.contentColumnWidth)px"
         return """
         <!DOCTYPE html>
         <html>
@@ -253,6 +253,10 @@ final class EditorViewController: NSViewController, WKNavigationDelegate {
            specificity (#editor), not on order. */
         #editor .cm-scroller {
             overflow: auto;
+            /* Keep gutters outside .cm-content, whose bounds define
+               CodeMirror's multi-line selection rectangles. */
+            padding-inline: \(MarkdownHTML.pagePaddingHorizontal)px;
+            box-sizing: border-box;
             font-family: \(MarkdownHTML.bodyFontFamily) !important;
             font-size: \(MarkdownHTML.bodyFontSize)px;
             line-height: \(MarkdownHTML.bodyLineHeight);
@@ -262,7 +266,7 @@ final class EditorViewController: NSViewController, WKNavigationDelegate {
             max-width: \(columnMaxWidth);
             min-height: 100%;
             margin: 0 auto;
-            padding: \(MarkdownHTML.pagePaddingTop)px \(MarkdownHTML.pagePaddingHorizontal)px \(MarkdownHTML.pagePaddingBottom)px;
+            padding: \(MarkdownHTML.pagePaddingTop)px 0 \(MarkdownHTML.pagePaddingBottom)px;
             box-sizing: border-box;
             caret-color: var(--text);
         }
